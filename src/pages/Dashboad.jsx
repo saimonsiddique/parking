@@ -57,8 +57,6 @@ function Dashboad() {
     setTotalTruck(total.truck);
   }, [filteredData]);
 
-  console.log(emptySlot);
-
   return (
     <Layout>
       <div className="flex h-screen">

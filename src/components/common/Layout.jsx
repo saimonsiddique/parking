@@ -5,10 +5,10 @@ function Layout({ children }) {
   return (
     <>
       <div className="flex">
-        <div className="flex-[0.1]">
+        <div className="flex-[0.2]">
           <Sidebar />
         </div>
-        <div className="flex-[0.9]">{children}</div>
+        <div className="flex-[0.8]">{children}</div>
       </div>
     </>
   );
