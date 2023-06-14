@@ -23,19 +23,20 @@ function Dashboad() {
   useEffect(() => {
     const allVehicles = JSON.parse(localStorage.getItem("vehicles"));
     // filter the vehicles by date
-    const filteredVehicles = allVehicles.filter(
-      (vehicle) => moment(vehicle.entryTime).format("YYYY-MM-DD") === searchDate
+    const filteredVehicles = allVehicles?.filter(
+      (vehicle) =>
+        moment(vehicle.entryTime)?.format("YYYY-MM-DD") === searchDate
     );
     setFilteredData(filteredVehicles);
-    setEmptySlot(totalSlot - filteredVehicles.length);
+    setEmptySlot(totalSlot - filteredVehicles?.length);
   }, [searchDate]);
 
   useEffect(() => {
-    const overTwoHoursVehicles = filteredData.filter((vehicle) => {
+    const overTwoHoursVehicles = filteredData?.filter((vehicle) => {
       const entryTime = moment(vehicle.entryTime);
       const exitTime = moment(vehicle.exitTime);
-      const duration = moment.duration(exitTime.diff(entryTime));
-      const hours = duration.asHours();
+      const duration = moment.duration(exitTime?.diff(entryTime));
+      const hours = duration?.asHours();
       if (hours > 2) {
         return vehicle;
       }
@@ -49,12 +50,12 @@ function Dashboad() {
       microbus: 0,
       truck: 0,
     };
-    filteredData.forEach((vehicle) => {
-      total[vehicle.type] += 1;
+    filteredData?.forEach((vehicle) => {
+      total[vehicle?.type] += 1;
     });
-    setTotalCars(total.car);
-    setTotalMiniBus(total.microbus);
-    setTotalTruck(total.truck);
+    setTotalCars(total?.car);
+    setTotalMiniBus(total?.microbus);
+    setTotalTruck(total?.truck);
   }, [filteredData]);
 
   return (
@@ -77,16 +78,16 @@ function Dashboad() {
                 <div className="flex flex-col gap-2 mt-5">
                   <InfoCard
                     name={"Vehicle Parked More than 2 hours"}
-                    vehicleNum={overTwoHours.length}
+                    vehicleNum={overTwoHours?.length}
                   />
                 </div>
                 <div className="flex flex-col gap-2 mt-5">
                   <div className="grid grid-cols-2 gap-2">
-                    {overTwoHours.map((vehicle) => (
+                    {overTwoHours?.map((vehicle) => (
                       <InfoCard
-                        key={vehicle.license}
-                        name={vehicle.type}
-                        vehicleNum={vehicle.license}
+                        key={vehicle?.license}
+                        name={vehicle?.type}
+                        vehicleNum={vehicle?.license}
                       />
                     ))}
                   </div>
