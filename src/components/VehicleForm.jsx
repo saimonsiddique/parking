@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const vehicleTypes = ["microbus", "truck", "car"];
 
@@ -13,6 +14,9 @@ function VehicleForm() {
   const [exitTime, setExitTime] = useState("");
   const [parkingCharge, setParkingCharge] = useState(0);
 
+  const { id } = useParams();
+  console.log(id);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newVehicle = {
@@ -26,13 +30,17 @@ function VehicleForm() {
       exitTime,
       parkingCharge,
     };
-    if (localStorage.getItem("vehicles")) {
-      const vehicles = JSON.parse(localStorage.getItem("vehicles"));
-      vehicles.push(newVehicle);
-      localStorage.setItem("vehicles", JSON.stringify(vehicles));
+
+    const allVehicles = JSON.parse(localStorage.getItem("vehicles"));
+    if (allVehicles && id) {
+      const index = allVehicles.findIndex((vehicle) => vehicle.license === id);
+      allVehicles[index] = newVehicle;
+      localStorage.setItem("vehicles", JSON.stringify(allVehicles));
+    } else if (allVehicles) {
+      allVehicles.push(newVehicle);
+      localStorage.setItem("vehicles", JSON.stringify(allVehicles));
     } else {
-      const vehicles = [newVehicle];
-      localStorage.setItem("vehicles", JSON.stringify(vehicles));
+      localStorage.setItem("vehicles", JSON.stringify([newVehicle]));
     }
     //  Reset the form
     setLicense("");
@@ -46,6 +54,22 @@ function VehicleForm() {
     setParkingCharge(0);
   };
 
+  useEffect(() => {
+    if (id) {
+      const vehicles = JSON.parse(localStorage.getItem("vehicles"));
+      const vehicle = vehicles.find((vehicle) => vehicle.license === id);
+      setLicense(vehicle.license);
+      setType(vehicle.type);
+      setOwnerName(vehicle.ownerName);
+      setPhone(vehicle.phone);
+      setStatus(vehicle.status);
+      setAddress(vehicle.address);
+      setEntryTime(vehicle.entryTime);
+      setExitTime(vehicle.exitTime);
+      setParkingCharge(vehicle.parkingCharge);
+    }
+  }, [id]);
+
   return (
     <div className="card bg-gray-300 shadow-lg">
       <form onSubmit={handleSubmit}>
@@ -56,13 +80,13 @@ function VehicleForm() {
           <input
             type="text"
             placeholder="License Number"
-            className="input input-bordered w-full max-w-xs focus:outline-none"
+            className="input input-bordered w-full focus:outline-none"
             value={license}
             onChange={(e) => setLicense(e.target.value)}
           />
           <span className="text-md font-semibold uppercase">vehicle Type</span>
           <select
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered w-full"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -81,7 +105,7 @@ function VehicleForm() {
           <input
             type="text"
             placeholder="Owner Name"
-            className="input input-bordered w-full max-w-xs focus:outline-none"
+            className="input input-bordered w-full  focus:outline-none"
             value={ownerName}
             onChange={(e) => setOwnerName(e.target.value)}
           />
@@ -91,13 +115,13 @@ function VehicleForm() {
           <input
             type="text"
             placeholder="Owner Phone Number"
-            className="input input-bordered w-full max-w-xs focus:outline-none"
+            className="input input-bordered w-full  focus:outline-none"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
           <span className="text-md font-semibold uppercase">Status</span>
           <select
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered w-full "
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -108,26 +132,26 @@ function VehicleForm() {
           <input
             type="text"
             placeholder="Owner Address"
-            className="input input-bordered w-full max-w-xs focus:outline-none"
+            className="input input-bordered w-full  focus:outline-none"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
-          <div className="w-96">
+          <div className="w-full">
             <span className="text-md font-semibold uppercase">Entry Time</span>
             <input
               type="datetime-local"
               placeholder="Entry Time"
-              className="input input-bordered w-full max-w-xs focus:outline-none"
+              className="input input-bordered w-full  focus:outline-none"
               value={entryTime}
               onChange={(e) => setEntryTime(e.target.value)}
             />
           </div>
-          <div className="w-96">
+          <div className="w-full">
             <span className="text-md font-semibold uppercase">Exit Time</span>
             <input
               type="datetime-local"
               placeholder="Exit Time"
-              className="input input-bordered w-full max-w-xs focus:outline-none"
+              className="input input-bordered w-full  focus:outline-none"
               value={exitTime}
               onChange={(e) => setExitTime(e.target.value)}
             />
@@ -138,7 +162,7 @@ function VehicleForm() {
           <input
             type="text"
             placeholder="Parking Charge"
-            className="input input-bordered w-full max-w-xs focus:outline-none"
+            className="input input-bordered w-full  focus:outline-none"
             value={parkingCharge}
             onChange={(e) => setParkingCharge(e.target.value)}
           />
